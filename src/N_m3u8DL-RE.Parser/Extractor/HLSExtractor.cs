@@ -353,11 +353,15 @@ internal class HLSExtractor : IExtractor
             // #EXT-X-MAP
             else if (line.StartsWith(HLSTags.ext_x_map))
             {
+                String url = ParserUtil.CombineURL(BaseUrl, ParserUtil.GetAttribute(line, "URI"));
+                // 剔除YK的广告 ext_x_map
+                if(!url.Contains("/ad/"))
+                {
                 if (playlist.MediaInit == null || hasAd) 
                 {
                     playlist.MediaInit = new MediaSegment()
                     {
-                        Url = PreProcessUrl(ParserUtil.CombineURL(BaseUrl, ParserUtil.GetAttribute(line, "URI"))),
+                        Url = url,
                         Index = -1, // 便于排序
                     };
                     if (line.Contains("BYTERANGE"))
@@ -390,6 +394,8 @@ internal class HLSExtractor : IExtractor
                         break;
                     }
                 }
+            
+            }
             }
             // 评论行不解析
             else if (line.StartsWith('#')) continue;
