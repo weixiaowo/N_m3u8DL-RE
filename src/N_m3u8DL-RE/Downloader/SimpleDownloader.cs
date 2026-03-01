@@ -6,7 +6,8 @@ using N_m3u8DL_RE.Crypto;
 using N_m3u8DL_RE.Entity;
 using N_m3u8DL_RE.Util;
 using Spectre.Console;
-
+using CSBBTS;
+using CSCopyRightDRM;
 namespace N_m3u8DL_RE.Downloader;
 
 /// <summary>
@@ -47,12 +48,32 @@ internal class SimpleDownloader : IDownloader
                 {
                     var key = segment.EncryptInfo.Key;
                     var nonce = segment.EncryptInfo.IV;
-
+                    
                     var fileBytes = File.ReadAllBytes(dResult.ActualFilePath);
                     var decrypted = ChaCha20Util.DecryptPer1024Bytes(fileBytes, key!, nonce!);
                     await File.WriteAllBytesAsync(dResult.ActualFilePath, decrypted);
                     break;
                 }
+                case EncryptMethod.BBTS:
+                {
+                    var key = segment.EncryptInfo.Key;
+                    BBTS bbts = new BBTS();
+                    var fileBytes = File.ReadAllBytes(dResult.ActualFilePath);
+                    var decrypted = bbts.DecryptTS(fileBytes,key!);
+                    await File.WriteAllBytesAsync(dResult.ActualFilePath, decrypted);
+                    break;
+                }
+                case EncryptMethod.COPYRIGHTDRM:
+                {
+                    var key = segment.EncryptInfo.Key;
+                    CopyRightDRM copyRightDRM=new CopyRightDRM();
+                    var fileBytes = File.ReadAllBytes(dResult.ActualFilePath);
+                    var decrypted = copyRightDRM.DecryptTS(fileBytes,key!);
+                    await File.WriteAllBytesAsync(dResult.ActualFilePath, decrypted);
+                    break;
+                }
+
+                
                 case EncryptMethod.SAMPLE_AES_CTR:
                     // throw new NotSupportedException("SAMPLE-AES-CTR");
                     break;
