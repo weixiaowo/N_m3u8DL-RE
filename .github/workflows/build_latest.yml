@@ -234,6 +234,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      discussions: write
     if: ${{ github.event.inputs.doRelease == 'true' }}
     needs: [set-date,build-win-nt6_0-x86,build-win-x64-arm64,build-android-bionic-x64-arm64,build-linux-x64,build-mac-x64-arm64]
     steps:
