@@ -48,11 +48,12 @@ internal class SimpleDownloadManager
 
     private void ChangeSpecInfo(StreamSpec streamSpec, List<Mediainfo> mediainfos, ref bool useAACFilter)
     {
-        if (!DownloaderConfig.MyOptions.BinaryMerge && mediainfos.Any(m => m.DolbyVison))
-        {
-            DownloaderConfig.MyOptions.BinaryMerge = true;
-            Logger.WarnMarkUp($"[darkorange3_1]{ResString.autoBinaryMerge2}[/]");
-        }
+        // 注释 杜比视界自动二进制合并，改为强制用户选择，避免不必要的二进制合并
+        // if (!DownloaderConfig.MyOptions.BinaryMerge && mediainfos.Any(m => m.DolbyVison))
+        // {
+        //     DownloaderConfig.MyOptions.BinaryMerge = true;
+        //     Logger.WarnMarkUp($"[darkorange3_1]{ResString.autoBinaryMerge2}[/]");
+        // }
 
         if (DownloaderConfig.MyOptions.MuxAfterDone && mediainfos.Any(m => m.DolbyVison))
         {
